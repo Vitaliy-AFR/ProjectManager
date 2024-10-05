@@ -6,7 +6,6 @@ import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -24,5 +23,20 @@ public class InMemoryProjectServiceImpl implements ProjectService {
     @Override
     public Project saveProject(Project project) {
         return repository.saveProject(project.getId(), project);
+    }
+
+    @Override
+    public Project findById(UUID id) {
+        return repository.findById(id);
+    }
+
+    @Override
+    public Project updateProject(Project project) {
+        return repository.updateProject(project);
+    }
+
+    @Override
+    public void deleteProject(UUID id) {
+        repository.deleteProject(id);
     }
 }

@@ -19,5 +19,4 @@ public class Project {
     private LocalDateTime endDate;
     private final Map<UUID, Task> tasks = new HashMap<>();
 
-
 }

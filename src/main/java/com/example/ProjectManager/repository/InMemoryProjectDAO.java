@@ -19,4 +19,28 @@ public class InMemoryProjectDAO {
         return project;
     }
 
+    public Project findById (UUID id) {
+        return PROJECTS.getOrDefault(id, null);
+    }
+
+    public Project updateProject(Project project) {
+        UUID id = project.getId();
+        if (PROJECTS.containsKey(id)) {
+            PROJECTS.get(id).setName(project.getName());
+            PROJECTS.get(id).setDescription(project.getDescription());
+            PROJECTS.get(id).setEndDate(project.getEndDate());
+            return PROJECTS.get(id);
+        }
+        return null;
+    }
+
+    public void deleteProject (UUID id) {
+        var project = findById(id);
+        if (project != null) {
+            PROJECTS.remove(id);
+        }
+
+    }
+
+
 }
