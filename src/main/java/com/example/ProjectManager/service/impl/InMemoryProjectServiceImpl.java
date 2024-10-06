@@ -6,7 +6,8 @@ import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -16,18 +17,18 @@ public class InMemoryProjectServiceImpl implements ProjectService {
     private final InMemoryProjectDAO repository;
 
     @Override
-    public Map<UUID, Project> findAllProjects() {
+    public List<Project> findAllProjects() {
         return repository.findAllProjects();
     }
 
     @Override
     public Project saveProject(Project project) {
-        return repository.saveProject(project.getId(), project);
+        return repository.saveProject(project);
     }
 
     @Override
-    public Project findById(UUID id) {
-        return repository.findById(id);
+    public Optional<Project> findById(UUID id) {
+        return Optional.ofNullable(repository.findById(id));
     }
 
     @Override

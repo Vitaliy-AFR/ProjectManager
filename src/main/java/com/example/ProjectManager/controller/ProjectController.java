@@ -5,7 +5,8 @@ import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /*
@@ -22,7 +23,7 @@ public class ProjectController {
     private final ProjectService service;
 
     @GetMapping
-    public Map<UUID, Project> findAllProjects() {
+    public List<Project> findAllProjects() {
         return service.findAllProjects();
     }
 
@@ -33,7 +34,7 @@ public class ProjectController {
     }
 
     @GetMapping("/{id}")
-    public Project findById(@PathVariable UUID id) {
+    public Optional<Project> findById(@PathVariable UUID id) {
         return service.findById(id);
     }
 

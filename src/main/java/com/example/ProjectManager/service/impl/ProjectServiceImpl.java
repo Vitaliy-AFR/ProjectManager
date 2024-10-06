@@ -8,7 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -19,8 +20,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository repository;
 
     @Override
-    public Map<UUID, Project> findAllProjects() {
-        return repository.findAllMap();
+    public List<Project> findAllProjects() {
+        return repository.findAll();
     }
 
     @Override
@@ -29,8 +30,8 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public Project findById(UUID id) {
-        return repository.findByIdFromMap(id);
+    public Optional<Project> findById(UUID id) {
+        return repository.findById(id);
     }
 
     @Override
@@ -41,7 +42,6 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     @Transactional
     public void deleteProject(UUID id) {
-        repository.delete(repository.findByIdFromMap(id));
-
+        repository.deleteById(id);
     }
 }
