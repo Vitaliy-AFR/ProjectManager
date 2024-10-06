@@ -8,6 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 import java.util.UUID;
 
+/*
+Всю бизнес логику нужно покрыть тестами
+Изучить тесты для контроллеров и для репозиториев (с помощью спринга). Интеграционные тесты.
+Для сервисов - юнит тесты (Mockito и JUnit). (Спринг - ограниченный контекст).
+ */
+
 @RestController
 @RequestMapping("api/v1/projects")
 @AllArgsConstructor
@@ -37,8 +43,9 @@ public class ProjectController {
     }
 
     @DeleteMapping("delete_project/{id}")
-    public void deleteProject(@PathVariable UUID id){
+    public String deleteProject(@PathVariable UUID id){
         service.deleteProject(id);
+        return "Проект удален";
     }
 
 }
