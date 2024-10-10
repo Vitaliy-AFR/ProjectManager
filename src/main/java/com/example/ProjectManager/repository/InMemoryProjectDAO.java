@@ -8,8 +8,6 @@ import java.util.*;
 @Repository
 public class InMemoryProjectDAO {
 
-//    private final Map<UUID, Project> PROJECTS = new HashMap<>();
-
     private final List<Project> PROJECTS = new ArrayList<>();
 
     public List<Project> findAllProjects() {

@@ -1,5 +1,6 @@
 package com.example.ProjectManager.model;
 
+import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Data;
 
@@ -7,14 +8,22 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
-@Builder
+@Entity
+@Table(name = "tasks")
 public class Task {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
     private final UUID id = UUID.randomUUID();
-    private final UUID projectId;
+
+    @Column(name = "project_id")
+    private UUID projectId;
+
     private String name;
     private String description;
     private final LocalDateTime startDate = LocalDateTime.now();
     private LocalDateTime endDate;
+
+
 
 }

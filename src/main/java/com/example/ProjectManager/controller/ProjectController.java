@@ -30,7 +30,7 @@ public class ProjectController {
     @PostMapping("save_project")
     public String saveProject(@RequestBody Project project) {
         service.saveProject(project);
-        return "Проект успешно добавлен";
+        return "Проект добавлен";
     }
 
     @GetMapping("/{id}")
@@ -45,8 +45,12 @@ public class ProjectController {
 
     @DeleteMapping("delete_project/{id}")
     public String deleteProject(@PathVariable UUID id){
-        service.deleteProject(id);
-        return "Проект удален";
+        if (service.findById(id).isPresent()){
+            service.deleteProject(id);
+            return "Проект удален";
+        } else {
+            return "Такого проекта не существует";
+        }
     }
 
 }

@@ -36,7 +36,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project updateProject(Project project) {
-        return repository.save(project);
+        return repository.updateProject(project);
     }
 
     @Override
