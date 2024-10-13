@@ -3,7 +3,6 @@ package com.example.ProjectManager.service.impl;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.repository.ProjectRepository;
 import com.example.ProjectManager.repository.TaskRepository;
-import com.example.ProjectManager.service.ProjectService;
 import com.example.ProjectManager.service.TaskService;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;

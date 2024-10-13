@@ -3,6 +3,7 @@ package com.example.ProjectManager.controller;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.service.TaskService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class TaskController {
     private final TaskService service;
 
     @GetMapping
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Task> findAllTasks() {
         return service.findAllTasks();
     }

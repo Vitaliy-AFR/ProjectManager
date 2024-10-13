@@ -3,6 +3,7 @@ package com.example.ProjectManager.controller;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,6 +24,7 @@ public class ProjectController {
     private final ProjectService service;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Project> findAllProjects() {
         return service.findAllProjects();
     }
