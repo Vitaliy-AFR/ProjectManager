@@ -8,10 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(ProjectController.class)
 public class ProjectControllerTest  {
@@ -27,7 +28,7 @@ public class ProjectControllerTest  {
 //    @Test
 //    public void loginTest() throws Exception {
 //        this.mockMvc.perform(get("/api/v1/projects"))
-//                .andExpect(status().is3xxRedirection());
+//                .andExpect(redirectedUrl("http://localhost:8080/login"));
 //    }
 
 
@@ -36,7 +37,8 @@ public class ProjectControllerTest  {
     public void findAllProjectsTest() throws Exception {
         this.mockMvc.perform(get("/api/v1/projects"))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"));
     }
 
 
