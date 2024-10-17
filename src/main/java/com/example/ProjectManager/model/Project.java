@@ -1,6 +1,8 @@
 package com.example.ProjectManager.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,7 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "projects")
+@Builder
 public class Project {
 
     @Id
