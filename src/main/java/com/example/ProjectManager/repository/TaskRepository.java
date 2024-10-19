@@ -9,8 +9,7 @@ import java.util.UUID;
 
 public interface TaskRepository extends JpaRepository<Task, UUID> {
 
-    //сделать один из запросов через query
-    @Query
+    @Query("SELECT task FROM Task task WHERE task.projectId = ?1")
     List<Task> findByProjectId(UUID projectId);
 
 }
