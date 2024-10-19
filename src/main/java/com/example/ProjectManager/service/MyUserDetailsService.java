@@ -1,7 +1,7 @@
 package com.example.ProjectManager.service;
 
 import com.example.ProjectManager.Config.MyUserDetails;
-import com.example.ProjectManager.model.MyUser;
+import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,7 @@ public class MyUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<MyUser> user = repository.findByName(username);
+        Optional<User> user = repository.findByName(username);
         return user.map(MyUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(username + " не найден"));
     }

@@ -1,6 +1,6 @@
 package com.example.ProjectManager.Config;
 
-import com.example.ProjectManager.model.MyUser;
+import com.example.ProjectManager.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,9 +11,9 @@ import java.util.stream.Collectors;
 
 public class MyUserDetails implements UserDetails {
 
-    private MyUser user;
+    private User user;
 
-    public MyUserDetails(MyUser user) {
+    public MyUserDetails(User user) {
         this.user = user;
     }
 

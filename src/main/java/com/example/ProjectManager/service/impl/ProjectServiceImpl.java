@@ -36,7 +36,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public Project updateProject(Project project) {
-        return repository.updateProject(project);
+        if (!repository.findById(project.getId()).isPresent()) return null;
+        Project newProject = repository.findById(project.getId()).get();
+        newProject.setName(project.getName());
+        newProject.setDescription(project.getDescription());
+        newProject.setEndDate(project.getEndDate());
+        return repository.save(newProject);
     }
 
     @Override

@@ -2,6 +2,8 @@ package com.example.ProjectManager.repository;
 
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.Task;
+import com.example.ProjectManager.service.ProjectService;
+import com.example.ProjectManager.service.impl.ProjectServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -14,10 +16,10 @@ import java.util.UUID;
 public class InMemoryTaskDAO {
 
     private final List<Task> TASKS = new ArrayList<>();
-    private ProjectRepository projectRepository;
+    private ProjectService projectService;
 
     public boolean projectNotExist(UUID projectId){
-        return projectRepository.findById(projectId).isPresent() ? false : true;
+        return projectService.findById(projectId).isPresent() ? false : true;
     }
 
     public List<Task> findAllTasks() {
@@ -33,9 +35,9 @@ public class InMemoryTaskDAO {
         if (projectNotExist(task.getProjectId())) return null;
         task.setProjectId(task.getProjectId());
         TASKS.add(task);
-        Project project = projectRepository.findById(task.getProjectId()).get();
+        Project project = projectService.findById(task.getProjectId()).get();
         project.getTasks().add(task);
-        projectRepository.save(project);
+        projectService.saveProject(project);
         return task;
     }
 
@@ -44,7 +46,7 @@ public class InMemoryTaskDAO {
     }
 
     private void updateTaskInProject(Task task) {
-        Project project = projectRepository.findById(task.getProjectId()).get();
+        Project project = projectService.findById(task.getProjectId()).get();
         int i = 0;
         for (int j = 0; j < project.getTasks().size(); j++) {
             if (project.getTasks().get(j).getId().equals(task.getId())) i = j;
@@ -52,7 +54,7 @@ public class InMemoryTaskDAO {
         project.getTasks().get(i).setName(task.getName());
         project.getTasks().get(i).setDescription(task.getDescription());
         project.getTasks().get(i).setEndDate(task.getEndDate());
-        projectRepository.updateProject(project);
+        projectService.updateProject(project);
     }
 
     public Task updateTask(Task task) {

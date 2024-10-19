@@ -32,7 +32,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findAllTasksForProject(UUID projectId) {
-        return projectRepository.findById(projectId).orElse(null).getTasks();
+        return repository.findByProjectId(projectId);
+//        return projectRepository.findById(projectId).orElse(null).getTasks();
     }
 
     @Override
@@ -49,7 +50,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task updateTask(Task task) {
-        return repository.updateTask(task);
+        if (!repository.findById(task.getId()).isPresent()) return null;
+        Task newTask = repository.findById(task.getId()).get();
+        newTask.setName(task.getName());
+        newTask.setDescription(task.getDescription());
+        newTask.setEndDate(task.getEndDate());
+        return repository.save(newTask);
     }
 
     @Override

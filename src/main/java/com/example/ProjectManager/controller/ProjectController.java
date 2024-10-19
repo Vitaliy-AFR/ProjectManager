@@ -21,10 +21,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectController {
 
+    //Изучить как использовать сервис, тот который не праймари. Но аннотацию не менять.
+
     private final ProjectService service;
 
     @GetMapping
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public List<Project> findAllProjects() {
         return service.findAllProjects();
     }

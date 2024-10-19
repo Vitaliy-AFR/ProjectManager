@@ -1,6 +1,6 @@
 package com.example.ProjectManager.service;
 
-import com.example.ProjectManager.model.MyUser;
+import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,12 +14,12 @@ public class UserService {
     private UserRepository repository;
     private PasswordEncoder passwordEncoder;
 
-    public void addUser(MyUser user){
+    public void addUser(User user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         repository.save(user);
     }
 
-    public List<MyUser> findAllUsers(){
+    public List<User> findAllUsers(){
         return repository.findAll();
     }
 

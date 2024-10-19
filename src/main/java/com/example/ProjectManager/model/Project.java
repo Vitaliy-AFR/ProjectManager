@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
@@ -13,7 +14,8 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "projects")
-@Builder
+//@Builder
+//@NoArgsConstructor
 public class Project {
 
     @Id
@@ -25,7 +27,10 @@ public class Project {
     private final LocalDateTime startDate = LocalDateTime.now();
     private LocalDateTime endDate;
 
-    @OneToMany(cascade = CascadeType.ALL)
+//    @ManyToOne
+//    private MyUser user;
+
+    @OneToMany(cascade = CascadeType.ALL) //убрать каскад, сделать самостоятельно удаление, использовать @Transactional
     @JoinColumn(name = "project_id")
     private List<Task> tasks;
 }
