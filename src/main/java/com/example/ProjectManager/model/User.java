@@ -12,12 +12,12 @@ import java.util.UUID;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id = UUID.randomUUID();
-
-        @Column(unique = true)
 //    @Id
+//    @GeneratedValue(strategy = GenerationType.UUID)
+//    private UUID id = UUID.randomUUID();
+
+//    @Column(unique = true)
+    @Id
     private String name;
     private String password;
     private String roles;
