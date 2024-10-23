@@ -1,6 +1,7 @@
 package com.example.ProjectManager.service.impl;
 
 import com.example.ProjectManager.model.Project;
+import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.InMemoryProjectDAO;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;

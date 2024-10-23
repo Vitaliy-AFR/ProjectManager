@@ -1,9 +1,11 @@
 package com.example.ProjectManager.controller;
 
+import com.example.ProjectManager.Config.MyUserDetails;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,8 +22,6 @@ import java.util.UUID;
 @RequestMapping("api/v1/projects")
 @AllArgsConstructor
 public class ProjectController {
-
-    //Изучить как использовать сервис, тот который не праймари. Но аннотацию не менять.
 
     private final ProjectService service;
 
