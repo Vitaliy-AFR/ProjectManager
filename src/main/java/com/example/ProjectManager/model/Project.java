@@ -32,7 +32,7 @@ public class Project {
     @ManyToOne
     private User user;
 
-    @OneToMany(cascade = CascadeType.ALL) //убрать каскад, сделать самостоятельно удаление, использовать @Transactional
+    @OneToMany //(cascade = CascadeType.ALL) //убрать каскад, сделать самостоятельно удаление, использовать @Transactional
     @JoinColumn(name = "project_id")
     private List<Task> tasks;
 }

@@ -3,6 +3,7 @@ package com.example.ProjectManager.service.impl;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.UserRepository;
 import com.example.ProjectManager.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(String name) {
         Optional<User> user = repository.findByName(name);
         if (user.isPresent()) {

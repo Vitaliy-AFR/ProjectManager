@@ -12,4 +12,6 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query("SELECT task FROM Task task WHERE task.projectId = ?1")
     List<Task> findByProjectId(UUID projectId);
 
+    void deleteByProjectId(UUID projectId);
+
 }

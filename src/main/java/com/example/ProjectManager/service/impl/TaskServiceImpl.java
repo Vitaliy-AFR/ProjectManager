@@ -4,6 +4,7 @@ import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.repository.ProjectRepository;
 import com.example.ProjectManager.repository.TaskRepository;
 import com.example.ProjectManager.service.TaskService;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -59,6 +60,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    @Transactional
     public void deleteTask(UUID id) {
         repository.deleteById(id);
     }

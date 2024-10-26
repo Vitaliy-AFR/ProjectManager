@@ -4,6 +4,7 @@ import com.example.ProjectManager.Config.MyUserDetails;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.ProjectRepository;
+import com.example.ProjectManager.repository.TaskRepository;
 import com.example.ProjectManager.repository.UserRepository;
 import com.example.ProjectManager.service.ProjectService;
 import jakarta.transaction.Transactional;
@@ -22,6 +23,7 @@ import java.util.UUID;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository repository;
+    private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
     @Override
@@ -63,8 +65,9 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    @Transactional
+    @Transactional //оно и так тут было, но пока не разобрался, как работает
     public void deleteProject(UUID id) {
+        taskRepository.deleteByProjectId(id);
         repository.deleteById(id);
     }
 }
