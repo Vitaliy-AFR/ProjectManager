@@ -22,19 +22,21 @@ import java.util.UUID;
 @Primary
 public class ProjectServiceImpl implements ProjectService {
 
-    private final ProjectRepository repository;
+    private final ProjectRepository projectRepository; //переименовать в проджект репозитори
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
+
+    private static final String NAME_ADMIN = "admin";
 
     @Override
     public List<Project> findAllProjects() {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         Optional<User> currentUser = userRepository.findByName(userDetails.getUsername());
-        if (currentUser.get().getName().equals("admin")) {
-            return repository.findAll();
+        if (currentUser.get().getName().equals(NAME_ADMIN)) {
+            return projectRepository.findAll();
         } else {
-            return repository.findAllByUser(currentUser.get());
+            return projectRepository.findAllByUser(currentUser.get());
         }
     }
 
@@ -43,31 +45,29 @@ public class ProjectServiceImpl implements ProjectService {
         MyUserDetails userDetails = (MyUserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         Optional<User> currentUser = userRepository.findByName(userDetails.getUsername());
-        if (currentUser.isPresent()) {
-            project.setUser(currentUser.get());
-        }
-        return repository.save(project);
+        currentUser.ifPresent(project::setUser);
+        return projectRepository.save(project);
     }
 
     @Override
     public Optional<Project> findById(UUID id) {
-        return repository.findById(id);
+        return projectRepository.findById(id);
     }
 
-    @Override
+    @Override //изучить как работает hibernate
     public Project updateProject(Project project) {
-        if (!repository.findById(project.getId()).isPresent()) return null;
-        Project newProject = repository.findById(project.getId()).get();
+        if (!projectRepository.findById(project.getId()).isPresent()) return null;
+        Project newProject = projectRepository.findById(project.getId()).get(); //hibernate отслеживает new project
         newProject.setName(project.getName());
         newProject.setDescription(project.getDescription());
         newProject.setEndDate(project.getEndDate());
-        return repository.save(newProject);
+        return projectRepository.save(newProject);
     }
 
     @Override
-    @Transactional //оно и так тут было, но пока не разобрался, как работает
+    @Transactional //изучить как работает
     public void deleteProject(UUID id) {
         taskRepository.deleteByProjectId(id);
-        repository.deleteById(id);
+        projectRepository.deleteById(id);
     }
 }

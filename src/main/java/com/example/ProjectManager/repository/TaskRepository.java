@@ -12,6 +12,9 @@ public interface TaskRepository extends JpaRepository<Task, UUID> {
     @Query("SELECT task FROM Task task WHERE task.projectId = ?1")
     List<Task> findByProjectId(UUID projectId);
 
+    @Query(value = "SELECT * FROM tasks WHERE tasks.project_id = ?1 LIMIT 1", nativeQuery = true) //сделать, чтобы выдавал только первую таску
+    List<Task> findFirstByProjectId(UUID projectId);
+
     void deleteByProjectId(UUID projectId);
 
 }

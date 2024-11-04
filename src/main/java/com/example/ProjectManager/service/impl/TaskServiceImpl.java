@@ -4,7 +4,6 @@ import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.repository.ProjectRepository;
 import com.example.ProjectManager.repository.TaskRepository;
 import com.example.ProjectManager.service.TaskService;
-import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -18,7 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
-    private final TaskRepository repository;
+    private final TaskRepository taskRepository;
     private final ProjectRepository projectRepository;
 
     @Override
@@ -28,40 +27,38 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<Task> findAllTasks() {
-        return repository.findAll();
+        return taskRepository.findAll();
     }
 
     @Override
     public List<Task> findAllTasksForProject(UUID projectId) {
-        return repository.findByProjectId(projectId);
-//        return projectRepository.findById(projectId).orElse(null).getTasks();
+        return taskRepository.findByProjectId(projectId);
     }
 
     @Override
     public Task saveTask(Task task) {
-        Task currentTask = repository.save(task);
+        Task currentTask = taskRepository.save(task);
         projectRepository.findById(task.getProjectId()).get().getTasks().add(currentTask);
         return currentTask;
     }
 
     @Override
     public Optional<Task> findById(UUID id) {
-        return repository.findById(id);
+        return taskRepository.findById(id);
     }
 
     @Override
     public Task updateTask(Task task) {
-        if (!repository.findById(task.getId()).isPresent()) return null;
-        Task newTask = repository.findById(task.getId()).get();
+        if (!taskRepository.findById(task.getId()).isPresent()) return null;
+        Task newTask = taskRepository.findById(task.getId()).get();
         newTask.setName(task.getName());
         newTask.setDescription(task.getDescription());
         newTask.setEndDate(task.getEndDate());
-        return repository.save(newTask);
+        return taskRepository.save(newTask);
     }
 
     @Override
-    @Transactional
     public void deleteTask(UUID id) {
-        repository.deleteById(id);
+        taskRepository.deleteById(id);
     }
 }

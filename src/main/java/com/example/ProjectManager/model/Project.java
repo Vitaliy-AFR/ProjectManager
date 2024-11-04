@@ -16,8 +16,6 @@ import java.util.UUID;
 @Data
 @Entity
 @Table(name = "projects")
-//@Builder
-//@NoArgsConstructor
 public class Project {
 
     @Id
