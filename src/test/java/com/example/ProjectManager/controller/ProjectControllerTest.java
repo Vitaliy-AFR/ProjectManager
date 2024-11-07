@@ -2,11 +2,8 @@ package com.example.ProjectManager.controller;
 
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.repository.ProjectRepository;
-import com.example.ProjectManager.repository.TaskRepository;
-import com.example.ProjectManager.repository.UserRepository;
 import com.example.ProjectManager.service.ProjectService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +13,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
@@ -25,7 +21,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -72,12 +67,9 @@ public class ProjectControllerTest  {
     //Тесты по урокам letsCode
     @Test
     public void findAllProjectsTest() throws Exception {
-        Project project1 = new Project();
-        project1.setName("Test project 1");
-        Project project2 = new Project();
-        project2.setName("Test project 2");
-        Project project3 = new Project();
-        project3.setName("Test project 3");
+        Project project1 = Project.builder().name("Test project 1").build();
+        Project project2 = Project.builder().name("Test project 2").build();
+        Project project3 = Project.builder().name("Test project 3").build();
         var projects = List.of(
                 project1,
                 project2,
@@ -96,8 +88,7 @@ public class ProjectControllerTest  {
 
     @Test
     public void saveProjectTest() throws Exception {
-        Project project = new Project();
-        project.setName("Test project 1");
+        Project project = Project.builder().name("Test project 1").build();
         String projectJson = objectMapper.writeValueAsString(project);
         this.mockMvc.perform(post("/api/v1/projects/save_project")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,12 +102,9 @@ public class ProjectControllerTest  {
     @Test
     public void findAllProjects_ReturnsValidResponseEntity(){
         //given
-        Project project1 = new Project();
-        project1.setName("Test project 1");
-        Project project2 = new Project();
-        project2.setName("Test project 2");
-        Project project3 = new Project();
-        project3.setName("Test project 3");
+        Project project1 = Project.builder().name("Test project 1").build();
+        Project project2 = Project.builder().name("Test project 2").build();
+        Project project3 = Project.builder().name("Test project 3").build();
         var projects = List.of(
                 project1,
                 project2,
