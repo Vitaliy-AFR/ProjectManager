@@ -1,14 +1,10 @@
 package com.example.ProjectManager.controller;
 
-import com.example.ProjectManager.Config.MyUserDetails;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,7 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectController {
 
-    private final ProjectService service;
+    private final ProjectService projectService;
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -34,29 +30,29 @@ public class ProjectController {
 //        return new ResponseEntity<>(service.findAllProjects(), HttpStatus.OK) ;
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.service.findAllProjects());
+                .body(this.projectService.findAllProjects());
     }
 
     @PostMapping("save_project")
     public String saveProject(@RequestBody Project project) {
-        service.saveProject(project);
+        projectService.saveProject(project);
         return "Проект добавлен";
     }
 
     @GetMapping("/{id}")
     public Optional<Project> findById(@PathVariable UUID id) {
-        return service.findById(id);
+        return projectService.findById(id);
     }
 
     @PutMapping("update_project")
     public Project updateProject(@RequestBody Project project) {
-        return service.updateProject(project);
+        return projectService.updateProject(project);
     }
 
     @DeleteMapping("delete_project/{id}")
     public String deleteProject(@PathVariable UUID id){
-        if (service.findById(id).isPresent()){
-            service.deleteProject(id);
+        if (projectService.findById(id).isPresent()){
+            projectService.deleteProject(id);
             return "Проект удален";
         } else {
             return "Такого проекта не существует";
