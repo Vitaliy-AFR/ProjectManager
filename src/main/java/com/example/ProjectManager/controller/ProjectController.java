@@ -22,6 +22,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class ProjectController {
 
+    private static final String PROJECT_ADDED = "Проект добавлен";
     private final ProjectService projectService;
 
     @GetMapping
@@ -36,7 +37,8 @@ public class ProjectController {
     @PostMapping("save_project")
     public String saveProject(@RequestBody Project project) {
         projectService.saveProject(project);
-        return "Проект добавлен";
+        return PROJECT_ADDED;
+
     }
 
     @GetMapping("/{id}")

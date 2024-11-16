@@ -1,3 +1,4 @@
+
 package com.example.ProjectManager.controller;
 
 import com.example.ProjectManager.model.Project;
@@ -11,6 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@WithMockUser(roles = "ADMIN", password = "admin", username = "admin")
 
 @ExtendWith(MockitoExtension.class)
-public class ProjectControllerTest  {
+public class ProjectControllerTest_1 {
 
     @Mock
     ProjectRepository projectRepository;
