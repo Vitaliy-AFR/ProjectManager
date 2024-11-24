@@ -1,8 +1,11 @@
 package com.example.ProjectManager.controller;
 
 import com.example.ProjectManager.model.Project;
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,53 +15,51 @@ import java.util.Optional;
 import java.util.UUID;
 
 /*
-Всю бизнес логику нужно покрыть тестами
-Изучить тесты для контроллеров и для репозиториев (с помощью спринга). Интеграционные тесты.
-Для сервисов - юнит тесты (Mockito и JUnit). (Спринг - ограниченный контекст).
+(Спринг - ограниченный контекст).
  */
 
 @RestController
 @RequestMapping("api/v1/projects")
 @AllArgsConstructor
+@Slf4j
 public class ProjectController {
 
     private static final String PROJECT_ADDED = "Проект добавлен";
+    private static final String PROJECT_DELETED = "Проект удален";
     private final ProjectService projectService;
 
     @GetMapping
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<List<Project>> findAllProjects() {
-//        return new ResponseEntity<>(service.findAllProjects(), HttpStatus.OK) ;
+        log.info("Показываем все проекты для профиля Admin или проекты для конкретного User");
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(this.projectService.findAllProjects());
     }
 
     @PostMapping("save_project")
-    public String saveProject(@RequestBody Project project) {
+    public ResponseEntity<String> saveProject(@RequestBody Project project) {
         projectService.saveProject(project);
-        return PROJECT_ADDED;
+        log.info("saveProject with name: {}", project.getName());
+        return new ResponseEntity<>(PROJECT_ADDED, HttpStatus.CREATED) ;
 
     }
 
     @GetMapping("/{id}")
-    public Optional<Project> findById(@PathVariable UUID id) {
-        return projectService.findById(id);
+    public ResponseEntity<Project> findById(@PathVariable UUID id) throws NotFoundException {
+        return ResponseEntity.ok().body(projectService.findById(id).get());
     }
 
     @PutMapping("update_project")
-    public Project updateProject(@RequestBody Project project) {
-        return projectService.updateProject(project);
+    public ResponseEntity<Project> updateProject(@RequestBody Project project) throws NotFoundException {
+        return ResponseEntity.ok()
+                .body(projectService.updateProject(project));
     }
 
     @DeleteMapping("delete_project/{id}")
-    public String deleteProject(@PathVariable UUID id){
-        if (projectService.findById(id).isPresent()){
-            projectService.deleteProject(id);
-            return "Проект удален";
-        } else {
-            return "Такого проекта не существует";
-        }
+    public ResponseEntity<String> deleteProject(@PathVariable UUID id) throws NotFoundException{
+        projectService.deleteProject(id);
+        return new ResponseEntity<>(PROJECT_DELETED, HttpStatus.OK);
+
     }
 
 }

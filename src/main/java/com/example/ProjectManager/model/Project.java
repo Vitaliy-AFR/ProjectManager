@@ -16,22 +16,28 @@ import java.util.UUID;
 @Table(name = "projects")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Project {
+
+    //добавить валидацию (проверку данных на корректность)
+
+    public Project() {
+        id = UUID.randomUUID();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private final UUID id = UUID.randomUUID();
-
+    private final UUID id;
+    
     private String name;
     private String description;
-    private final LocalDateTime startDate = LocalDateTime.now();
+    
+    private final LocalDateTime startDate = LocalDateTime.now(); //сделать через аннотацию
     private LocalDateTime endDate;
 
     @ManyToOne
     private User user;
 
-    @OneToMany //(cascade = CascadeType.ALL) //убрать каскад, сделать самостоятельно удаление, использовать @Transactional
+    @OneToMany
     @JoinColumn(name = "project_id")
     private List<Task> tasks;
 }

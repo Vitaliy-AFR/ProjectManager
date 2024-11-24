@@ -2,9 +2,10 @@ package com.example.ProjectManager.repository;
 
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.Task;
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.service.ProjectService;
-import com.example.ProjectManager.service.impl.ProjectServiceImpl;
 import lombok.AllArgsConstructor;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -18,7 +19,7 @@ public class InMemoryTaskDAO {
     private final List<Task> TASKS = new ArrayList<>();
     private ProjectService projectService;
 
-    public boolean projectNotExist(UUID projectId){
+    public boolean projectNotExist(UUID projectId) throws NotFoundException {
         return projectService.findById(projectId).isPresent() ? false : true;
     }
 
@@ -26,12 +27,12 @@ public class InMemoryTaskDAO {
         return TASKS;
     }
 
-    public List<Task> findAllTasksForProject(UUID projectId) {
+    public List<Task> findAllTasksForProject(UUID projectId) throws NotFoundException {
         if (projectNotExist(projectId)) return null;
         return TASKS.stream().filter(v -> v.getProjectId().equals(projectId)).toList();
     }
 
-    public Task saveTask(Task task) {
+    public Task saveTask(Task task) throws NotFoundException {
         if (projectNotExist(task.getProjectId())) return null;
         task.setProjectId(task.getProjectId());
         TASKS.add(task);
@@ -45,7 +46,7 @@ public class InMemoryTaskDAO {
         return TASKS.stream().filter(v -> v.getId().equals(id)).findAny().orElse(null);
     }
 
-    private void updateTaskInProject(Task task) {
+    private void updateTaskInProject(Task task) throws NotFoundException {
         Project project = projectService.findById(task.getProjectId()).get();
         int i = 0;
         for (int j = 0; j < project.getTasks().size(); j++) {
@@ -54,10 +55,14 @@ public class InMemoryTaskDAO {
         project.getTasks().get(i).setName(task.getName());
         project.getTasks().get(i).setDescription(task.getDescription());
         project.getTasks().get(i).setEndDate(task.getEndDate());
-        projectService.updateProject(project);
+        try {
+            projectService.updateProject(project);
+        } catch (NotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public Task updateTask(Task task) {
+    public Task updateTask(Task task) throws NotFoundException {
         int i = TASKS.indexOf(findById(task.getId()));
         if (TASKS.contains(findById(task.getId()))) {
             TASKS.get(i).setName(task.getName());

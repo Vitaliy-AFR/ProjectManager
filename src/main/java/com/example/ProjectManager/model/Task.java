@@ -14,12 +14,15 @@ import java.util.UUID;
 @Table(name = "tasks")
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class Task {
+
+    public Task() {
+        id = UUID.randomUUID();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private final UUID id = UUID.randomUUID();
+    private final UUID id;
 
     @Column(name = "project_id")
     private UUID projectId;

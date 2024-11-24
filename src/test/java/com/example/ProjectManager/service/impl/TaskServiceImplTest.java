@@ -1,5 +1,6 @@
 package com.example.ProjectManager.service.impl;
 
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.repository.ProjectRepository;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -29,6 +29,8 @@ import static org.mockito.Mockito.*;
 )
 class TaskServiceImplTest {
 
+    private static final String PROJECT_NOT_EXIST = "Такого проекта не существует";
+    private static final String TASK_NOT_EXIST = "Такой задачи не существует";
     @Autowired
     TaskServiceImpl taskService;
 
@@ -83,28 +85,61 @@ class TaskServiceImplTest {
     }
 
     @Test
-    void findAllTasksForProject() {
+    void findAllTasksForProject_ifProjectExist() throws NotFoundException {
 
         //given
-        UUID id = UUID.randomUUID();
+        UUID projectId = UUID.randomUUID();
+        Project project = Project.builder()
+                .id(projectId)
+                .name("Test project")
+                .build();
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
 
         //when
-        taskService.findAllTasksForProject(id);
+        taskService.findAllTasksForProject(projectId);
 
         //then
-        verify(taskRepository, times(1)).findByProjectId(id);
+        verify(taskRepository, times(1)).findByProjectId(projectId);
 
     }
 
     @Test
-    void saveTask() {
+    void findAllTasksForProject_ifProjectNotExist() throws NotFoundException {
+
+        //given
+        UUID projectId = UUID.randomUUID();
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            taskService.findAllTasksForProject(projectId);
+        });
+
+
+        //then
+        assertEquals(PROJECT_NOT_EXIST, exception.getMessage());
+        verify(taskRepository, never()).findByProjectId(projectId);
+
+    }
+
+    @Test
+    void saveTask_ifProjectExist() throws NotFoundException {
 
         //given
         java.util.List<Task> tasks = new ArrayList<>();
-        Project project = Project.builder().name("Test project 1").tasks(tasks).build();
-        Task task = Task.builder().name("Test task 1").build();
-        task.setProjectId(project.getId());
-        when(projectRepository.findById(task.getProjectId())).thenReturn(Optional.of(project));
+        UUID projectId = UUID.randomUUID();
+        UUID taskId = UUID.randomUUID();
+        Project project = Project.builder()
+                .id(projectId)
+                .name("Test project 1")
+                .tasks(tasks)
+                .build();
+        Task task = Task.builder()
+                .id(taskId)
+                .name("Test task 1")
+                .projectId(projectId)
+                .build();
+        when(projectRepository.findById(projectId)).thenReturn(Optional.of(project));
         doAnswer(invocation -> {
             Task currentTask = invocation.getArgument(0);
             return currentTask;
@@ -115,42 +150,103 @@ class TaskServiceImplTest {
 
         //then
         InOrder inOrder = inOrder(taskRepository, projectRepository);
+        inOrder.verify(projectRepository, times(2)).findById(projectId);
         inOrder.verify(taskRepository, times(1)).save(task);
-        inOrder.verify(projectRepository, times(1)).findById(task.getProjectId());
+
 
         assertEquals(task, project.getTasks().get(tasks.size() - 1));
 
     }
 
     @Test
-    void findById() {
+    void saveTask_ifProjectNotExist() throws NotFoundException {
+
+        //given
+        java.util.List<Task> tasks = new ArrayList<>();
+        UUID projectId = UUID.randomUUID();
+        UUID taskId = UUID.randomUUID();
+        Project project = Project.builder()
+                .id(projectId)
+                .name("Test project 1")
+                .tasks(tasks)
+                .build();
+        Task task = Task.builder()
+                .id(taskId)
+                .name("Test task 1")
+                .projectId(projectId)
+                .build();
+        when(projectRepository.findById(projectId)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            taskService.saveTask(task);
+        });
+
+
+        //then
+        InOrder inOrder = inOrder(taskRepository, projectRepository);
+        inOrder.verify(projectRepository, times(1)).findById(projectId);
+        inOrder.verify(taskRepository, never()).save(task);
+
+
+        assertEquals(PROJECT_NOT_EXIST, exception.getMessage());
+
+    }
+
+    @Test
+    void findById_ifTaskExist() throws NotFoundException {
 
         //given
         UUID id = UUID.randomUUID();
+        Task task = Task.builder()
+                .id(id)
+                .name("Test task")
+                .build();
+        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
 
         //when
         taskService.findById(id);
 
         //then
-        verify(taskRepository, times(1)).findById(id);
-
-
+        verify(taskRepository, times(2)).findById(id);
     }
 
     @Test
-    void updateTask_ifTaskExist() {
+    void findById_ifTaskNotExist() throws NotFoundException {
 
         //given
-        Task oldTask = Task.builder().name("Test old task").build();
-        Task newTask = Task.builder().name("Test new task")
+        UUID id = UUID.randomUUID();
+        when(taskRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            taskService.findById(id);
+        });
+
+
+        //then
+        assertEquals(TASK_NOT_EXIST, exception.getMessage());
+        verify(taskRepository, times(1)).findById(id);
+    }
+
+    @Test
+    void updateTask_ifTaskExist() throws NotFoundException {
+
+        //given
+        UUID id = UUID.randomUUID();
+        Task oldTask = Task.builder()
+                .id(id)
+                .name("Test old task")
+                .build();
+        Task newTask = Task.builder()
+                .name("Test new task")
+                .id(id)
                 .description("update")
                 .endDate(LocalDateTime.now())
                 .build();
 
-        // у newTask должен быть такой же id, как у oldTask
-        // т.к. мы не можем установить у newTask id от oldTask, то в данном тесте мы находим по id newTask'a oldTask.
-        UUID oldTaskId = newTask.getId();
-        doReturn(Optional.of(oldTask)).when(taskRepository).findById(oldTaskId);
+
+        doReturn(Optional.of(oldTask)).when(taskRepository).findById(id);
 
         doAnswer(invocationOnMock -> {
             Task currentTask = invocationOnMock.getArgument(0);
@@ -170,44 +266,74 @@ class TaskServiceImplTest {
         assertEquals(newTask.getEndDate(), newTask.getEndDate());
 
         InOrder inOrder = inOrder(taskRepository);
-        inOrder.verify(taskRepository, times(2)).findById(oldTaskId);
+        inOrder.verify(taskRepository, times(2)).findById(id);
         inOrder.verify(taskRepository, times(1)).save(updateTask);
 
     }
 
     @Test
-    void updateTask_ifTaskNotExist() {
+    void updateTask_ifTaskNotExist() throws NotFoundException {
 
         //given
         Task task = Task.builder()
+                .id(UUID.randomUUID())
                 .name("Test task")
                 .build();
         when(projectRepository.findById(task.getId())).thenReturn(Optional.empty());
 
 
         //when
-        taskService.updateTask(task);
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            taskService.updateTask(task);
+        });
+
 
         //then
         InOrder inOrder = inOrder(taskRepository);
         inOrder.verify(taskRepository, times(1)).findById(task.getId());
         inOrder.verify(taskRepository, never()).save(task);
 
-        assertNull(taskService.updateTask(task));
+        assertEquals(TASK_NOT_EXIST, exception.getMessage());
 
     }
 
     @Test
-    void deleteTask() {
+    void deleteTask_ifTaskExist() throws NotFoundException {
 
         //given
         UUID id = UUID.randomUUID();
+        Task task = Task.builder()
+                .id(id)
+                .name("Test task")
+                .build();
+        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
 
         //when
         taskService.deleteTask(id);
 
         //then
+        verify(taskRepository, times( 1)).findById(id);
         verify(taskRepository, times(1)).deleteById(id);
+
+    }
+
+    @Test
+    void deleteTask_ifTaskNotExist() throws NotFoundException {
+
+        //given
+        UUID id = UUID.randomUUID();
+        when(taskRepository.findById(id)).thenReturn(Optional.empty());
+
+        //when
+        Exception exception = assertThrows(NotFoundException.class, () -> {
+            taskService.deleteTask(id);
+        });
+
+        //then
+        verify(taskRepository, times( 1)).findById(id);
+        verify(taskRepository, never()).deleteById(id);
+
+        assertEquals(TASK_NOT_EXIST, exception.getMessage());
 
     }
 }

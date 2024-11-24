@@ -1,13 +1,14 @@
 package com.example.ProjectManager.controller;
 
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.service.TaskService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -15,44 +16,47 @@ import java.util.UUID;
 @AllArgsConstructor
 public class TaskController {
 
-    private final TaskService service;
+    private static final String TASK_CREATED = "Задача добавлена";
+    private static final String TASK_DELETED = "Задача удалена";
+    private final TaskService taskService;
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public List<Task> findAllTasks() {
-        return service.findAllTasks();
+    public ResponseEntity<List<Task>>  findAllTasks() {
+        return ResponseEntity.ok()
+                        .body(taskService.findAllTasks());
     }
 
     @GetMapping("tasks_for_project/{projectId}")
-    public List<Task> findAllTasksForProject(@PathVariable UUID projectId) {
-        return service.findAllTasksForProject(projectId);
+    public ResponseEntity<List<Task>> findAllTasksForProject(@PathVariable UUID projectId) throws NotFoundException {
+        return ResponseEntity.ok()
+                        .body(taskService.findAllTasksForProject(projectId));
     }
 
     @PostMapping("save_task/{projectId}")
-    public String saveTask(@PathVariable UUID projectId, @RequestBody Task task) {
-        if (service.projectNotExist(projectId)) return "Нельзя добавить задачу в несуществующий проект";
+    public ResponseEntity<String> saveTask(@PathVariable UUID projectId, @RequestBody Task task) throws NotFoundException {
         task.setProjectId(projectId);
-        service.saveTask(task);
-        return "Задача добавлена";
+        taskService.saveTask(task);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(TASK_CREATED);
     }
 
     @GetMapping("/{id}")
-    public Optional<Task> findById(@PathVariable UUID id) {
-        return service.findById(id);
+    public ResponseEntity<Task> findById(@PathVariable UUID id) throws NotFoundException {
+        return ResponseEntity.ok()
+                        .body(taskService.findById(id).get());
     }
 
     @PutMapping("update_task")
-    public Task updateTask(@RequestBody Task task) {
-        if (!service.findById(task.getId()).isPresent()) return null;
-        return service.updateTask(task);
+    public Task updateTask(@RequestBody Task task) throws NotFoundException {
+        return taskService.updateTask(task);
     }
 
     @DeleteMapping("delete_task/{id}")
-    public String deleteTask(@PathVariable UUID id) {
-        if (service.findById(id).isPresent()){
-            service.deleteTask(id);
-            return "Задача удалена";
-        } else return "Такой задачи не существует";
+    public ResponseEntity<String> deleteTask(@PathVariable UUID id) throws NotFoundException {
+        taskService.deleteTask(id);
+        return ResponseEntity.ok()
+                .body(TASK_DELETED);
     }
 
 

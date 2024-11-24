@@ -1,4 +1,5 @@
 package com.example.ProjectManager.service;
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.Task;
 
 import java.util.List;
@@ -7,10 +8,10 @@ import java.util.UUID;
 
 public interface TaskService {
     List<Task> findAllTasks();
-    List<Task> findAllTasksForProject(UUID projectId);
-    Task saveTask(Task task);
-    Optional<Task> findById(UUID id);
-    Task updateTask(Task task);
-    void deleteTask(UUID id);
-    Boolean projectNotExist(UUID projectId);
+    List<Task> findAllTasksForProject(UUID projectId) throws NotFoundException;
+    Task saveTask(Task task) throws NotFoundException;
+    Optional<Task> findById(UUID id) throws NotFoundException;
+    Task updateTask(Task task) throws NotFoundException;
+    void deleteTask(UUID id) throws NotFoundException;
+    Boolean projectNotExist(UUID projectId) throws NotFoundException;
 }

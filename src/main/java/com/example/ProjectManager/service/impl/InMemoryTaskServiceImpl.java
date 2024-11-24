@@ -1,5 +1,6 @@
 package com.example.ProjectManager.service.impl;
 
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.repository.InMemoryTaskDAO;
 import com.example.ProjectManager.service.TaskService;
@@ -18,7 +19,7 @@ public class InMemoryTaskServiceImpl implements TaskService {
     private InMemoryTaskDAO repository;
 
     @Override
-    public Boolean projectNotExist(UUID projectId) {
+    public Boolean projectNotExist(UUID projectId) throws NotFoundException {
         return repository.projectNotExist(projectId);
     }
 
@@ -28,12 +29,12 @@ public class InMemoryTaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> findAllTasksForProject(UUID projectId) {
+    public List<Task> findAllTasksForProject(UUID projectId) throws NotFoundException {
         return repository.findAllTasksForProject(projectId);
     }
 
     @Override
-    public Task saveTask(Task task) {
+    public Task saveTask(Task task) throws NotFoundException {
         return repository.saveTask(task);
     }
 
@@ -43,7 +44,7 @@ public class InMemoryTaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Task updateTask(Task task) {
+    public Task updateTask(Task task) throws NotFoundException {
         return repository.updateTask(task);
     }
 
