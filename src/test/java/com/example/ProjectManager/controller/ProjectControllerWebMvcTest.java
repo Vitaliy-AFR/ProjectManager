@@ -18,6 +18,7 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @TestPropertySource("classpath:application.yaml")
 class ProjectControllerWebMvcTest {
 
+    private static final String PROJECT_DELETED = "Проект удален";
     @Autowired
     private MockMvc mockMvc;
 
@@ -162,10 +164,44 @@ class ProjectControllerWebMvcTest {
     }
 
     @Test
-    void updateProject() {
+    @WithMockUser(roles = "ADMIN", password = "admin", username = "admin")
+    void updateProject() throws Exception {
+        Project newProject = Project.builder()
+                .id(UUID.randomUUID())
+                .name("Test new project")
+                .description("update")
+                .endDate(LocalDateTime.now())
+                .build();
+        String newProjectJson = objectMapper.writeValueAsString(newProject);
+
+        when(projectService.updateProject(newProject)).thenReturn(newProject);
+
+        mockMvc.perform(
+                put("/api/v1/projects/update_project")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(newProjectJson)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string(newProjectJson))
+                .andDo(print());
+
     }
 
     @Test
-    void deleteProject() {
+    @WithMockUser(roles = "ADMIN", password = "admin", username = "admin")
+    void deleteProject() throws Exception {
+        Project project = Project.builder()
+                .id(UUID.randomUUID())
+                .name("Test project")
+                .build();
+        UUID id = project.getId();
+
+        mockMvc.perform(
+                delete("/api/v1/projects/delete_project/{id}", id)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().string(PROJECT_DELETED))
+                .andDo(print());
+
     }
 }

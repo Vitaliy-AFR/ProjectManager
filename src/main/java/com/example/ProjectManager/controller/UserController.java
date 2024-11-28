@@ -16,12 +16,14 @@ import java.util.List;
 public class UserController {
 
     private static final String USER_CREATED = "Пользователь добавлен";
+    private static final String USER_DELETED = "Пользователь удален";
     private UserService userService;
 
     @PostMapping("/new_user")
     public ResponseEntity<String> addUser(@RequestBody User user){
         userService.addUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED)
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
                 .body(USER_CREATED);
     }
 
@@ -38,7 +40,9 @@ public class UserController {
     }
 
     @DeleteMapping("delete_user/{name}")
-    public void deleteUser(@PathVariable String name) throws NotFoundException {
+    public ResponseEntity<String> deleteUser(@PathVariable String name) throws NotFoundException {
         userService.deleteUser(name);
+        return ResponseEntity.ok()
+                .body(USER_DELETED);
     }
 }

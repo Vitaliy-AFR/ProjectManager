@@ -28,7 +28,7 @@ public class ProjectServiceImpl implements ProjectService {
     private final UserRepository userRepository;
 
     private static final String NAME_ADMIN = "admin";
-    private static final String PROJECT_NOT_FOUND = "Такого проекта не существует";
+    private static final String PROJECT_NOT_EXIST = "Такого проекта не существует";
 
     @Override
     public List<Project> findAllProjects() {
@@ -68,7 +68,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Optional<Project> findById(UUID id) throws NotFoundException {
         if (projectRepository.findById(id).isEmpty()) {
-            throw new NotFoundException(PROJECT_NOT_FOUND);
+            throw new NotFoundException(PROJECT_NOT_EXIST);
         }
         return projectRepository.findById(id);
     }
@@ -76,7 +76,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Override //изучить как работает hibernate
     public Project updateProject(Project project) throws NotFoundException {
         if (projectRepository.findById(project.getId()).isEmpty()) {
-            throw new NotFoundException(PROJECT_NOT_FOUND);
+            throw new NotFoundException(PROJECT_NOT_EXIST);
         }
         Project newProject = projectRepository.findById(project.getId()).get(); //hibernate отслеживает new project
         newProject.setName(project.getName());
@@ -89,7 +89,7 @@ public class ProjectServiceImpl implements ProjectService {
     @Transactional //изучить как работает
     public void deleteProject(UUID id) throws NotFoundException {
         if (findById(id).isEmpty()) {
-            throw new NotFoundException(PROJECT_NOT_FOUND);
+            throw new NotFoundException(PROJECT_NOT_EXIST);
         }
         taskRepository.deleteByProjectId(id);
         projectRepository.deleteById(id);

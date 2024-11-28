@@ -48,8 +48,9 @@ public class TaskController {
     }
 
     @PutMapping("update_task")
-    public Task updateTask(@RequestBody Task task) throws NotFoundException {
-        return taskService.updateTask(task);
+    public ResponseEntity<Task> updateTask(@RequestBody Task task) throws NotFoundException {
+        return ResponseEntity.ok()
+                .body(taskService.updateTask(task));
     }
 
     @DeleteMapping("delete_task/{id}")

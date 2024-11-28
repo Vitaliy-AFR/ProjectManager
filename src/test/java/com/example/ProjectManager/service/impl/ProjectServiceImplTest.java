@@ -60,7 +60,6 @@ class ProjectServiceImplTest {
 
     final String ADMIN_NAME = "admin";
     final String USER_NAME = "user";
-    private static final String PROJECT_DELETED = "Проект удален";
     private static final String PROJECT_NOT_EXIST = "Такого проекта не существует";
 
 
@@ -229,7 +228,10 @@ class ProjectServiceImplTest {
     void updateProject_ifProjectExist() throws NotFoundException {
 
         //given
-        Project oldProject = Project.builder().name("Test old project").build();
+        Project oldProject = Project.builder()
+                .id(UUID.randomUUID())
+                .name("Test old project")
+                .build();
         Project newProject = Project.builder()
                 .id(oldProject.getId())
                 .name("Test new project")
