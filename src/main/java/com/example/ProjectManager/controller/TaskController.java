@@ -6,9 +6,6 @@ import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.model.response.TaskDTO;
 import com.example.ProjectManager.service.TaskService;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,19 +21,19 @@ public class TaskController {
     private static final String TASK_CREATED = "Задача добавлена";
     private static final String TASK_DELETED = "Задача удалена";
     private final TaskService taskService;
-    private TaskMapper taskMapper;
+    private final TaskMapper taskMapper;
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public ResponseEntity<List<Task>>  findAllTasks() {
+    public ResponseEntity<List<TaskDTO>>  findAllTasks() {
         return ResponseEntity.ok()
-                        .body(taskService.findAllTasks());
+                        .body(taskMapper.toTaskDTOList(taskService.findAllTasks()));
     }
 
     @GetMapping("tasks_for_project/{projectId}")
-    public ResponseEntity<List<Task>> findAllTasksForProject(@PathVariable UUID projectId) throws NotFoundException {
+    public ResponseEntity<List<TaskDTO>> findAllTasksForProject(@PathVariable UUID projectId) throws NotFoundException {
         return ResponseEntity.ok()
-                        .body(taskService.findAllTasksForProject(projectId));
+                        .body(taskMapper.toTaskDTOList(taskService.findAllTasksForProject(projectId)));
     }
 
     @PostMapping("save_task/{projectId}")
@@ -48,15 +45,15 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Task> findById(@PathVariable UUID id) throws NotFoundException {
+    public ResponseEntity<TaskDTO> findById(@PathVariable UUID id) throws NotFoundException {
         return ResponseEntity.ok()
-                        .body(taskService.findById(id).get());
+                        .body(taskMapper.taskToDTO(taskService.findById(id).get()));
     }
 
     @PutMapping("update_task")
-    public ResponseEntity<Task> updateTask(@RequestBody Task task) throws NotFoundException {
+    public ResponseEntity<TaskDTO> updateTask(@RequestBody Task task) throws NotFoundException {
         return ResponseEntity.ok()
-                .body(taskService.updateTask(task));
+                .body(taskMapper.taskToDTO(taskService.updateTask(task)));
     }
 
     @DeleteMapping("delete_task/{id}")

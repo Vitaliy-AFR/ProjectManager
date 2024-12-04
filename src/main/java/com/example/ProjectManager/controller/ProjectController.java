@@ -1,7 +1,9 @@
 package com.example.ProjectManager.controller;
 
+import com.example.ProjectManager.mapper.ProjectMapper;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.Exceptions.NotFoundException;
+import com.example.ProjectManager.model.response.ProjectDTO;
 import com.example.ProjectManager.service.ProjectService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,36 +29,37 @@ public class ProjectController {
     private static final String PROJECT_ADDED = "Проект добавлен";
     private static final String PROJECT_DELETED = "Проект удален";
     private final ProjectService projectService;
+    private final ProjectMapper projectMapper;
 
     @GetMapping
-    public ResponseEntity<List<Project>> findAllProjects() {
+    public ResponseEntity<List<ProjectDTO>> findAllProjects() {
         log.info("Показываем все проекты для профиля Admin или проекты для конкретного User");
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.projectService.findAllProjects());
+                .body(projectMapper.toProjectDTOList(projectService.findAllProjects()));
     }
 
     @PostMapping("save_project")
     public ResponseEntity<String> saveProject(@RequestBody Project project) {
         projectService.saveProject(project);
         log.info("saveProject with name: {}", project.getName());
-        return new ResponseEntity<>(PROJECT_ADDED, HttpStatus.CREATED) ;
+        return new ResponseEntity<>(PROJECT_ADDED, HttpStatus.CREATED);
 
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Project> findById(@PathVariable UUID id) throws NotFoundException {
-        return ResponseEntity.ok().body(projectService.findById(id).get());
+    public ResponseEntity<ProjectDTO> findById(@PathVariable UUID id) throws NotFoundException {
+        return ResponseEntity.ok().body(projectMapper.projectToDTO(projectService.findById(id).get()));
     }
 
     @PutMapping("update_project")
-    public ResponseEntity<Project> updateProject(@RequestBody Project project) throws NotFoundException {
+    public ResponseEntity<ProjectDTO> updateProject(@RequestBody Project project) throws NotFoundException {
         return ResponseEntity.ok()
-                .body(projectService.updateProject(project));
+                .body(projectMapper.projectToDTO(projectService.updateProject(project)));
     }
 
     @DeleteMapping("delete_project/{id}")
-    public ResponseEntity<String> deleteProject(@PathVariable UUID id) throws NotFoundException{
+    public ResponseEntity<String> deleteProject(@PathVariable UUID id) throws NotFoundException {
         projectService.deleteProject(id);
         return new ResponseEntity<>(PROJECT_DELETED, HttpStatus.OK);
 

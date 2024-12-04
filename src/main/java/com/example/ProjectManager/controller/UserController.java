@@ -1,9 +1,12 @@
 package com.example.ProjectManager.controller;
 
 import com.example.ProjectManager.Exceptions.NotFoundException;
+import com.example.ProjectManager.mapper.UserMapper;
 import com.example.ProjectManager.model.User;
+import com.example.ProjectManager.model.response.UserDTO;
 import com.example.ProjectManager.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +20,9 @@ public class UserController {
 
     private static final String USER_CREATED = "Пользователь добавлен";
     private static final String USER_DELETED = "Пользователь удален";
-    private UserService userService;
+    private final UserService userService;
+    @Autowired
+    private final UserMapper userMapper;
 
     @PostMapping("/new_user")
     public ResponseEntity<String> addUser(@RequestBody User user){
@@ -28,15 +33,15 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> findAllUsers() {
+    public ResponseEntity<List<UserDTO>> findAllUsers() {
         return ResponseEntity.ok()
-                        .body(userService.findAllUsers());
+                        .body(userMapper.toUserDTOList(userService.findAllUsers()) );
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<User> findByName(@PathVariable String name) throws NotFoundException {
+    public ResponseEntity<UserDTO> findByName(@PathVariable String name) throws NotFoundException {
         return ResponseEntity.ok()
-                .body(userService.findByName(name).get());
+                .body(userMapper.userToDTO(userService.findByName(name).get()) );
     }
 
     @DeleteMapping("delete_user/{name}")
