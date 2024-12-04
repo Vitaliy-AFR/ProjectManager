@@ -1,9 +1,14 @@
 package com.example.ProjectManager.controller;
 
 import com.example.ProjectManager.Exceptions.NotFoundException;
+import com.example.ProjectManager.mapper.TaskMapper;
 import com.example.ProjectManager.model.Task;
+import com.example.ProjectManager.model.response.TaskDTO;
 import com.example.ProjectManager.service.TaskService;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +24,7 @@ public class TaskController {
     private static final String TASK_CREATED = "Задача добавлена";
     private static final String TASK_DELETED = "Задача удалена";
     private final TaskService taskService;
+    private TaskMapper taskMapper;
 
     @GetMapping
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")

@@ -13,3 +13,9 @@ spring:
     properties:
       hibernate:
         format_sql: true
+  application:
+    name: project-manager
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
