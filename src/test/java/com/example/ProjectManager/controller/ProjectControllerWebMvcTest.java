@@ -1,6 +1,6 @@
 package com.example.ProjectManager.controller;
 
-import com.example.ProjectManager.Config.SecurityConfig;
+import com.example.ProjectManager.config.SecurityConfig;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.Task;
 import com.example.ProjectManager.model.User;

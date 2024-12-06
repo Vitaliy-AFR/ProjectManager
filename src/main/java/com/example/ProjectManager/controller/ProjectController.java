@@ -1,10 +1,15 @@
 package com.example.ProjectManager.controller;
 
+//import com.example.ProjectManager.client.PersonFeignClient;
+import com.example.ProjectManager.client.PersonFeignClient;
 import com.example.ProjectManager.mapper.ProjectMapper;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.response.ProjectDTO;
 import com.example.ProjectManager.service.ProjectService;
+import com.example.demo.model.entity.Person;
+import com.example.demo.model.response.PersonDTO;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -30,6 +35,7 @@ public class ProjectController {
     private static final String PROJECT_DELETED = "Проект удален";
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
+    private final PersonFeignClient personFeignClient;
 
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> findAllProjects() {
@@ -37,6 +43,11 @@ public class ProjectController {
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(projectMapper.toProjectDTOList(projectService.findAllProjects()));
+    }
+
+    @GetMapping("/person/{id}")
+    public ResponseEntity<PersonDTO> findPersonById(@PathVariable @Pattern(regexp = "^[A-Za-z0-9]{4,10}") String id) {
+        return personFeignClient.getPerson(id);
     }
 
     @PostMapping("save_project")

@@ -1,6 +1,6 @@
 package com.example.ProjectManager.service.impl;
 
-import com.example.ProjectManager.Config.MyUserDetails;
+import com.example.ProjectManager.config.MyUserDetails;
 import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.User;
@@ -14,7 +14,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InOrder;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.core.Authentication;

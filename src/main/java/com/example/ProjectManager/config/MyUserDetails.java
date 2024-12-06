@@ -1,4 +1,4 @@
-package com.example.ProjectManager.Config;
+package com.example.ProjectManager.config;
 
 import com.example.ProjectManager.model.User;
 import org.springframework.security.core.GrantedAuthority;

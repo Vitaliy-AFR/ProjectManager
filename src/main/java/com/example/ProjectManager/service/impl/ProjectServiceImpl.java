@@ -1,6 +1,6 @@
 package com.example.ProjectManager.service.impl;
 
-import com.example.ProjectManager.Config.MyUserDetails;
+import com.example.ProjectManager.config.MyUserDetails;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.ProjectRepository;
