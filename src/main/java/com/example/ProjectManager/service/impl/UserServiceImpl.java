@@ -1,13 +1,11 @@
 package com.example.ProjectManager.service.impl;
 
 import com.example.ProjectManager.Exceptions.NotFoundException;
-import com.example.ProjectManager.client.PersonFeignClient;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.UserRepository;
 import com.example.ProjectManager.service.PersonUserService;
 import com.example.ProjectManager.service.UserService;
 import com.example.demo.model.response.PersonDTO;
-import com.example.demo.repository.PersonRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,11 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> findByName(String name) throws NotFoundException {
+    public Optional<PersonDTO> findByName(String name) throws NotFoundException {
         if (userRepository.findByName(name).isEmpty()) {
             throw new NotFoundException(USER_NOT_EXIST);
         }
-        return userRepository.findByName(name);
+        return personUserService.findByName(name);
     }
 
     @Override
@@ -51,5 +49,6 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException(USER_NOT_EXIST);
         }
         userRepository.delete(userRepository.findByName(name).get());
+        personUserService.deleteByName(name);
     }
 }

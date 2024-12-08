@@ -10,6 +10,6 @@ import java.util.Optional;
 public interface UserService {
     void addUser(User user);
     List<PersonDTO> findAllUsers();
-    Optional<User> findByName(String name) throws NotFoundException;
+    Optional<PersonDTO> findByName(String name) throws NotFoundException;
     void deleteUser(String name) throws NotFoundException;
 }

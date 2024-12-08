@@ -1,7 +1,7 @@
 package com.example.ProjectManager.service;
 
 import com.example.ProjectManager.client.PersonFeignClient;
-import com.example.ProjectManager.mapper.PersonAddRequestUserMapper;
+import com.example.ProjectManager.mapper.PersonRequestUserMapper;
 import com.example.ProjectManager.model.User;
 import com.example.demo.model.response.PersonDTO;
 import jakarta.ws.rs.BadRequestException;
@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -20,12 +21,12 @@ public class PersonUserService {
     public static final String PERSON_NOT_CREATED = "Person not created";
     private static final String BAD_REQUEST = "BAD REQUEST";
     PersonFeignClient personFeignClient;
-    PersonAddRequestUserMapper personAddRequestUserMapper;
+    PersonRequestUserMapper personRequestUserMapper;
 
     public void addPerson(User user) {
         ResponseEntity<PersonDTO> addPersonResponse
-                = personFeignClient.addPerson(personAddRequestUserMapper.userToPersonAddRequest(user));
-        if (!addPersonResponse.getStatusCode().is2xxSuccessful()){
+                = personFeignClient.addPerson(personRequestUserMapper.userToPersonAddRequest(user));
+        if (!addPersonResponse.getStatusCode().is2xxSuccessful()) {
             log.info(PERSON_NOT_CREATED);
             throw new BadRequestException(PERSON_NOT_CREATED);
         }
@@ -34,11 +35,30 @@ public class PersonUserService {
     public List<PersonDTO> findAll() {
         ResponseEntity<List<PersonDTO>> findAllResponse =
                 personFeignClient.findAll();
-        if (!findAllResponse.getStatusCode().is2xxSuccessful()){
+        if (!findAllResponse.getStatusCode().is2xxSuccessful()) {
             log.info(BAD_REQUEST);
             throw new BadRequestException(BAD_REQUEST);
         } else {
             return findAllResponse.getBody();
+        }
+    }
+
+    public Optional<PersonDTO> findByName(String name) {
+        ResponseEntity<PersonDTO> findByName = personFeignClient.getPerson(name);
+        PersonDTO personDTO = findByName.getBody();
+        if (!findByName.getStatusCode().is2xxSuccessful()) {
+            log.info(BAD_REQUEST);
+            throw new BadRequestException(BAD_REQUEST);
+        } else {
+            return Optional.of(personDTO);
+        }
+    }
+
+    public void deleteByName(String name) {
+        ResponseEntity<String> deleteResponse = personFeignClient.deletePerson(name);
+        if (!deleteResponse.getStatusCode().is2xxSuccessful()) {
+            log.info(BAD_REQUEST);
+            throw new BadRequestException(BAD_REQUEST);
         }
     }
 

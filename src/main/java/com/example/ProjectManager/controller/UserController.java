@@ -3,11 +3,9 @@ package com.example.ProjectManager.controller;
 import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.mapper.UserMapper;
 import com.example.ProjectManager.model.User;
-import com.example.ProjectManager.model.response.UserDTO;
 import com.example.ProjectManager.service.UserService;
 import com.example.demo.model.response.PersonDTO;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +37,9 @@ public class UserController {
     }
 
     @GetMapping("/{name}")
-    public ResponseEntity<UserDTO> findByName(@PathVariable String name) throws NotFoundException {
+    public ResponseEntity<PersonDTO> findByName(@PathVariable String name) throws NotFoundException {
         return ResponseEntity.ok()
-                .body(userMapper.userToDTO(userService.findByName(name).get()) );
+                .body(userService.findByName(name).get());
     }
 
     @DeleteMapping("delete_user/{name}")

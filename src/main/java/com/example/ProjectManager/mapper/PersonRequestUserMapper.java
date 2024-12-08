@@ -5,7 +5,7 @@ import com.example.demo.model.request.PersonAddRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersonAddRequestUserMapper {
+public class PersonRequestUserMapper {
 
     public PersonAddRequest userToPersonAddRequest(User user) {
         if (user == null) {
