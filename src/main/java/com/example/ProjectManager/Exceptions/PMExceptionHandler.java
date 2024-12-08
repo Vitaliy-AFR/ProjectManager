@@ -1,5 +1,6 @@
 package com.example.ProjectManager.Exceptions;
 
+import jakarta.ws.rs.BadRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,5 +16,12 @@ public class PMExceptionHandler {
         var reason = ex.getMessage();
         log.error(reason);
         return new ResponseEntity<>(reason, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<String> handleBadRequestException (BadRequestException ex){
+        var reason = ex.getMessage();
+        log.error(reason);
+        return new ResponseEntity<>(reason, HttpStatus.BAD_REQUEST);
     }
 }

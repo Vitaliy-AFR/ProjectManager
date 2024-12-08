@@ -6,6 +6,7 @@ import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.model.response.ProjectDTO;
 import com.example.ProjectManager.model.response.TaskDTO;
 import com.example.ProjectManager.model.response.UserDTO;
+import com.example.demo.model.response.PersonDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -16,7 +17,7 @@ import java.util.List;
 public interface ProjectMapper {
 
     @Mapping(target = "tasks", qualifiedByName = "fromProjectTasksToTaskDTOList", source = "tasks")
-    @Mapping(target = "user", qualifiedByName = "fromProjectUserToUserDTO", source = "user")
+    @Mapping(target = "person", qualifiedByName = "fromProjectUserToUserDTO", source = "user")
     ProjectDTO projectToDTO(Project project);
 
     @Named("fromProjectTasksToTaskDTOList")
@@ -25,13 +26,13 @@ public interface ProjectMapper {
     }
 
     @Named("fromProjectUserToUserDTO")
-    default UserDTO fromProjectUserToUserDTO(User user) {
+    default PersonDTO fromProjectUserToUserDTO(User user) {
         return userToDTO(user);
     }
 
     List<TaskDTO> toTaskDTOList(List<Task> tasks);
 
-    UserDTO userToDTO(User user);
+    PersonDTO userToDTO(User user);
 
     List<ProjectDTO> toProjectDTOList(List<Project> projects);
 

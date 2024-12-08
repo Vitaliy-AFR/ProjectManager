@@ -5,6 +5,7 @@ import com.example.ProjectManager.mapper.UserMapper;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.model.response.UserDTO;
 import com.example.ProjectManager.service.UserService;
+import com.example.demo.model.response.PersonDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,7 +22,6 @@ public class UserController {
     private static final String USER_CREATED = "Пользователь добавлен";
     private static final String USER_DELETED = "Пользователь удален";
     private final UserService userService;
-    @Autowired
     private final UserMapper userMapper;
 
     @PostMapping("/new_user")
@@ -33,9 +33,9 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UserDTO>> findAllUsers() {
+    public ResponseEntity<List<PersonDTO>> findAllUsers() {
         return ResponseEntity.ok()
-                        .body(userMapper.toUserDTOList(userService.findAllUsers()) );
+                        .body(userService.findAllUsers());
     }
 
     @GetMapping("/{name}")
