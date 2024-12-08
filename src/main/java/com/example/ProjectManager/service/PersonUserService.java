@@ -18,6 +18,7 @@ import java.util.List;
 public class PersonUserService {
 
     public static final String PERSON_NOT_CREATED = "Person not created";
+    private static final String BAD_REQUEST = "BAD REQUEST";
     PersonFeignClient personFeignClient;
     PersonAddRequestUserMapper personAddRequestUserMapper;
 
@@ -34,8 +35,8 @@ public class PersonUserService {
         ResponseEntity<List<PersonDTO>> findAllResponse =
                 personFeignClient.findAll();
         if (!findAllResponse.getStatusCode().is2xxSuccessful()){
-            log.info(PERSON_NOT_CREATED);
-            throw new BadRequestException(PERSON_NOT_CREATED);
+            log.info(BAD_REQUEST);
+            throw new BadRequestException(BAD_REQUEST);
         } else {
             return findAllResponse.getBody();
         }
