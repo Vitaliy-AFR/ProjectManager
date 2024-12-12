@@ -19,7 +19,7 @@ import java.util.Optional;
 public class PersonUserService {
 
     public static final String PERSON_NOT_CREATED = "Person not created";
-    private static final String BAD_REQUEST = "BAD REQUEST";
+    private static final String BAD_REQUEST = "Bad request";
     PersonFeignClient personFeignClient;
     PersonRequestUserMapper personRequestUserMapper;
 
