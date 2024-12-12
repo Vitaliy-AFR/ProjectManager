@@ -1,7 +1,7 @@
 package com.example.ProjectManager.service.impl;
 
-import com.example.ProjectManager.config.MyUserDetails;
 import com.example.ProjectManager.Exceptions.NotFoundException;
+import com.example.ProjectManager.config.MyUserDetails;
 import com.example.ProjectManager.model.Project;
 import com.example.ProjectManager.model.User;
 import com.example.ProjectManager.repository.ProjectRepository;
@@ -285,7 +285,7 @@ class ProjectServiceImplTest {
         assertEquals(PROJECT_NOT_EXIST, exception.getMessage());
     }
 
-    @ParameterizedTest (name = "{index} - Project exist = {0}")
+    @ParameterizedTest(name = "{index} - Project exist = {0}")
     @ValueSource(booleans = {true, false})
     void deleteProject(boolean projectExist) throws NotFoundException {
 
