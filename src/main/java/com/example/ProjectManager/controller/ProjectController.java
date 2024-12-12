@@ -1,13 +1,14 @@
 package com.example.ProjectManager.controller;
 
 //import com.example.ProjectManager.client.PersonFeignClient;
+
+import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.client.PersonFeignClient;
 import com.example.ProjectManager.mapper.ProjectMapper;
 import com.example.ProjectManager.model.Project;
-import com.example.ProjectManager.Exceptions.NotFoundException;
 import com.example.ProjectManager.model.response.ProjectDTO;
+import com.example.ProjectManager.service.MessageSender;
 import com.example.ProjectManager.service.ProjectService;
-import com.example.demo.model.entity.Person;
 import com.example.demo.model.response.PersonDTO;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 /*
@@ -33,13 +33,16 @@ public class ProjectController {
 
     private static final String PROJECT_ADDED = "Проект добавлен";
     private static final String PROJECT_DELETED = "Проект удален";
+    private static final String FIND_ALL_PROJECTS_FROM_USER = "Показываем все проекты для профиля Admin или проекты для конкретного User";
     private final ProjectService projectService;
     private final ProjectMapper projectMapper;
     private final PersonFeignClient personFeignClient;
+    private final MessageSender messageSender;
 
     @GetMapping
     public ResponseEntity<List<ProjectDTO>> findAllProjects() {
-        log.info("Показываем все проекты для профиля Admin или проекты для конкретного User");
+        log.info(FIND_ALL_PROJECTS_FROM_USER);
+        messageSender.send(FIND_ALL_PROJECTS_FROM_USER);
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(projectMapper.toProjectDTOList(projectService.findAllProjects()));
