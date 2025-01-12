@@ -1,11 +1,9 @@
 spring:
-
   datasource:
     url: jdbc:postgresql://localhost:5432/project_manager_db
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -15,10 +13,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
   application:
     name: project-manager
-
   rabbitmq:
     host: localhost
     port: 5672
